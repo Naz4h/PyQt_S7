@@ -24,6 +24,11 @@ class MainWindow(QMainWindow):
         view.setScene(self.scene)
         self.setCentralWidget(view)
     def create_actions(self) :
+        name="New"
+        self.action_file_new =QAction(QIcon('Icons/new.png'), name, self)
+        self.action_file_new.setStatusTip("Create new File")
+        self.action_file_new.setCheckable(True)
+        self.action_file_new.triggered.connect(lambda status,selection=name : self.on_triggered_action(status,selection))
         name="Open"
         self.action_file_open=QAction(QIcon('Icons/open.png'), name, self)
         self.action_file_open.setStatusTip("Open File")
@@ -46,7 +51,7 @@ class MainWindow(QMainWindow):
         self.toolbar=QToolBar("Main Toolbar")
         self.addToolBar(self.toolbar)
         self.toolbar.setIconSize(QSize(16,16))
-        self.setStatusBar(QStatusBar(self))
+        self.toolbar.addAction(self.action_file_new)
         self.toolbar.addAction(self.action_file_open)
         self.toolbar.addAction(self.action_file_exit)
     def create_menus(self) :
@@ -57,6 +62,7 @@ class MainWindow(QMainWindow):
         self.menu_style.addMenu(self.pen_style)
         self.brush_style = QMenu('Brush',self)
         self.menu_style.addMenu(self.brush_style)
+        self.menu_file.addAction(self.action_file_new)
         self.menu_file.addAction(self.action_file_open)
         self.menu_file.addAction(self.action_file_exit)
         self.pen_style.addAction(self.action_style_pen_color)
@@ -74,7 +80,13 @@ class MainWindow(QMainWindow):
             color=self.style_color()
             if color :
                 self.scene.set_brush_color(color)
+        elif selection=="New" :
+            self.new();
 
+    def new(self):
+        popup = QMessageBox.warning(self,"New","Are you sure you want to open a new file? \nUnsaved changes will be ignored.", QMessageBox.Ok,QMessageBox.Cancel)
+        if(popup == QMessageBox.Ok):
+            self.scene.clear()
     def exit(self) :
         popup = QMessageBox.warning(self,"Exit","Are you sure you want to exit? \nUnsaved changes will be ignored.",QMessageBox.Ok,QMessageBox.Cancel)
         if(popup == QMessageBox.Ok):
