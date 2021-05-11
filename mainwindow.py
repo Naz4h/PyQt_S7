@@ -2,11 +2,11 @@
 # icones https://p.yusukekamiyamane.com
 
 import sys
-from PyQt5.QtCore import Qt, QSize
+from PyQt5.QtCore import Qt, QSize, QFile, QIODevice
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication, QMainWindow, \
 QToolBar,QAction,QStatusBar,QGraphicsView, \
-QLabel,QVBoxLayout,QDialog, QDialogButtonBox, QColorDialog, QMenu, QMessageBox
+QLabel,QVBoxLayout,QDialog, QDialogButtonBox, QColorDialog, QMenu, QMessageBox, QFileDialog
 
 from scene import Scene
 
@@ -39,6 +39,11 @@ class MainWindow(QMainWindow):
         self.action_file_exit.setStatusTip("Exit application")
         self.action_file_exit.setCheckable(True)
         self.action_file_exit.triggered.connect(lambda status,selection=name : self.on_triggered_action(status,selection))
+        name="Save As"
+        self.action_file_save=QAction(QIcon('Icons/save_as.png'), name, self)
+        self.action_file_save.setStatusTip("Save file")
+        self.action_file_save.setCheckable(True)
+        self.action_file_save.triggered.connect(lambda status,selection=name : self.on_triggered_action(status,selection))
         name="Pen Color" 
         self.action_style_pen_color=QAction(QIcon('Icons/monkey_on_16x16.png'), name, self)
         self.action_style_pen_color.setStatusTip("Select Pen color")
@@ -64,6 +69,7 @@ class MainWindow(QMainWindow):
         self.menu_style.addMenu(self.brush_style)
         self.menu_file.addAction(self.action_file_new)
         self.menu_file.addAction(self.action_file_open)
+        self.menu_file.addAction(self.action_file_save)
         self.menu_file.addAction(self.action_file_exit)
         self.pen_style.addAction(self.action_style_pen_color)
         self.brush_style.addAction(self.action_style_brush_color)
@@ -82,6 +88,8 @@ class MainWindow(QMainWindow):
                 self.scene.set_brush_color(color)
         elif selection=="New" :
             self.new();
+        elif selection=="Save As" :
+            self.save();
 
     def new(self):
         popup = QMessageBox.warning(self,"New","Are you sure you want to open a new file? \nUnsaved changes will be ignored.", QMessageBox.Ok,QMessageBox.Cancel)
@@ -98,6 +106,8 @@ class MainWindow(QMainWindow):
         else :
             color=None
         return color
+    def save(self):
+        pass
 
 if __name__=="__main__" :
     app=QApplication(sys.argv)
