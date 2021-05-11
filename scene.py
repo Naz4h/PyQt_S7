@@ -2,7 +2,8 @@ import sys
 from PyQt5.QtCore import Qt, QSize,QPoint
 from PyQt5.QtGui import QIcon,QBrush,QPen
 from PyQt5.QtWidgets import QApplication,QMainWindow, \
-QGraphicsScene, QGraphicsView,QGraphicsItem, QGraphicsRectItem, QGraphicsEllipseItem
+QGraphicsScene, QGraphicsView,QGraphicsItem, QGraphicsRectItem, QGraphicsEllipseItem, \
+QGraphicsLineItem, QGraphicsPolygonItem, QGraphicsTextItem, QInputDialog
 
 class Scene (QGraphicsScene) :
     def __init__(self,*args,**kwargs):
@@ -36,6 +37,13 @@ class Scene (QGraphicsScene) :
         self.end=event.scenePos()
     def mouseReleaseEvent(self, event):
         self.end=event.scenePos()
+        if(self.tool == "line"):
+            line=QGraphicsLineItem(
+                self.begin.x(),self.begin.y(),
+                self.end.x(),self.end.y()
+            )
+            line.setPen(self.pen)
+            self.addItem(line)
         if(self.tool == "rect"):
             rect=QGraphicsRectItem(
                 self.begin.x(),self.begin.y(),
@@ -54,6 +62,21 @@ class Scene (QGraphicsScene) :
             ellipse.setPen(self.pen)
             ellipse.setBrush(self.brush)
             self.addItem(ellipse)
+        if(self.tool == "polygon"):
+            polygon=QGraphicsPolygonItem(
+                self.begin.x(),self.begin.y(),
+                self.end.x()-self.begin.x(),
+                self.end.y()-self.begin.y()
+            )
+            polygon.setPen(self.pen)
+            polygon.setBrush(self.brush)
+            self.addItem(polygon)
+        if(self.tool == "text"):
+            text=QGraphicsTextItem(
+                "Tonyvre !!!!"
+            )
+            text.setPos(self.begin.x(), self.begin.y())
+            self.addItem(text)
 
 if __name__=="__main__" :
     app=QApplication(sys.argv)
