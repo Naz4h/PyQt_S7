@@ -6,7 +6,7 @@ from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication, QMainWindow, \
 QToolBar,QAction,QStatusBar,QGraphicsView, \
-QLabel,QVBoxLayout,QDialog, QDialogButtonBox, QColorDialog, QMenu
+QLabel,QVBoxLayout,QDialog, QDialogButtonBox, QColorDialog, QMenu, QMessageBox
 
 from scene import Scene
 
@@ -76,7 +76,9 @@ class MainWindow(QMainWindow):
                 self.scene.set_brush_color(color)
 
     def exit(self) :
-        exit()
+        popup = QMessageBox.warning(self,"Exit","Are you sure you want to exit? \nUnsaved changes will be ignored.",QMessageBox.Ok,QMessageBox.Cancel)
+        if(popup == QMessageBox.Ok):
+            exit()
     def style_color(self):
         color=QColorDialog.getColor(Qt.yellow,self)
         if color.isValid() :
