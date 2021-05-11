@@ -95,6 +95,7 @@ class MainWindow(QMainWindow):
         popup = QMessageBox.warning(self,"New","Are you sure you want to open a new file? \nUnsaved changes will be ignored.", QMessageBox.Ok,QMessageBox.Cancel)
         if(popup == QMessageBox.Ok):
             self.scene.clear()
+            self.action_file_new.setCheckable(False)
     def exit(self) :
         popup = QMessageBox.warning(self,"Exit","Are you sure you want to exit? \nUnsaved changes will be ignored.",QMessageBox.Ok,QMessageBox.Cancel)
         if(popup == QMessageBox.Ok):
