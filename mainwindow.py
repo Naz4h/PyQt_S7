@@ -57,20 +57,31 @@ class MainWindow(QMainWindow):
         name="Solid Line" 
         self.action_style_solid_line=QAction(QIcon('Icons/tool_line.png'), name, self)
         self.action_style_solid_line.setStatusTip("Create a solid line")
+        self.action_style_solid_line.setCheckable(True)
         self.action_style_solid_line.triggered.connect(lambda status,selection=name : self.on_triggered_action(status,selection))
         name="Dot Line" 
         self.action_style_dot_line=QAction(QIcon('Icons/dot_line.png'), name, self)
         self.action_style_dot_line.setStatusTip("Create a dot line")
+        self.action_style_dot_line.setCheckable(True)
         self.action_style_dot_line.triggered.connect(lambda status,selection=name : self.on_triggered_action(status,selection))
         name="Dash Line" 
         self.action_style_dash_line=QAction(QIcon('Icons/dash_line.png'), name, self)
         self.action_style_dash_line.setStatusTip("Create a dash line")
+        self.action_style_dash_line.setCheckable(True)
         self.action_style_dash_line.triggered.connect(lambda status,selection=name : self.on_triggered_action(status,selection))
 
         name="Brush Color" 
         self.action_style_brush_color=QAction(QIcon('Icons/colorize.png'), name, self)
         self.action_style_brush_color.setStatusTip("Select Brush color")
         self.action_style_brush_color.triggered.connect(lambda status,selection=name : self.on_triggered_action(status,selection))
+        name="Brush Solid Patern" 
+        self.action_style_brush_solid=QAction(QIcon('Icons/cross_pattern.png'), name, self)
+        self.action_style_brush_solid.setStatusTip("Select brush solid patern")
+        self.action_style_brush_solid.triggered.connect(lambda status,selection=name : self.on_triggered_action(status,selection))
+        name="Brush Cross Patern" 
+        self.action_style_brush_cross=QAction(QIcon('Icons/cross_pattern.png'), name, self)
+        self.action_style_brush_cross.setStatusTip("Select brush cross patern")
+        self.action_style_brush_cross.triggered.connect(lambda status,selection=name : self.on_triggered_action(status,selection))
 
         name="Rectangle"
         self.action_rectangle=QAction(QIcon('Icons/tool_rectangle.png'), name, self)
@@ -147,6 +158,8 @@ class MainWindow(QMainWindow):
 
         self.brush_style = QMenu('Brush',self)
         self.menu_style.addMenu(self.brush_style)
+        self.brush_fill = QMenu('Brush Fill', self)
+        self.brush_style.addMenu(self.brush_fill)
         
         self.menu_file.addAction(self.action_file_new)
         self.menu_file.addAction(self.action_file_open)
@@ -160,6 +173,8 @@ class MainWindow(QMainWindow):
         self.pen_line.addAction(self.action_style_dot_line)
 
         self.brush_style.addAction(self.action_style_brush_color)
+        self.brush_fill.addAction(self.action_style_brush_solid)
+        self.brush_fill.addAction(self.action_style_brush_cross)
 
         self.menu_tools.addAction(self.action_line)
         self.menu_tools.addAction(self.action_rectangle)
@@ -195,18 +210,28 @@ class MainWindow(QMainWindow):
             d.resize(300,100)
             d.setWindowTitle("Number of the width")
             d.exec()
-            pen_width = int(line.text())
-            if pen_width:
+            pen_width = 0
+            try : 
+                pen_width = int(line.text())
+            except : 
+                d.setWindowTitle("Enter an integer")
+            if pen_width!=0:
                 self.scene.set_pen_width(pen_width)
         elif selection=="Solid Line": 
+            self.action_style_dot_line.setChecked(False)
+            self.action_style_dash_line.setChecked(False)
             pen_style = Qt.SolidLine
             if pen_style : 
                 self.scene.set_pen_style(pen_style)
         elif selection=="Dot Line": 
+            self.action_style_solid_line.setChecked(False)
+            self.action_style_dash_line.setChecked(False)
             pen_style = Qt.DotLine
             if pen_style : 
                 self.scene.set_pen_style(pen_style)
         elif selection=="Dash Line": 
+            self.action_style_dot_line.setChecked(False)
+            self.action_style_solid_line.setChecked(False)
             pen_style = Qt.DashLine
             if pen_style : 
                 self.scene.set_pen_style(pen_style)
@@ -215,7 +240,6 @@ class MainWindow(QMainWindow):
             color=self.style_color()
             if color :
                 self.scene.set_brush_color(color)
-        
 
         elif selection=="Line" : 
             self.scene.set_tool("line")
