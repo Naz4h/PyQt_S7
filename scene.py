@@ -2,8 +2,9 @@ import sys
 from PyQt5.QtCore import Qt, QSize,QPoint
 from PyQt5.QtGui import QIcon,QBrush,QPen
 from PyQt5.QtWidgets import QApplication,QMainWindow, \
-QGraphicsScene, QGraphicsView,QGraphicsItem, QGraphicsRectItem, QGraphicsEllipseItem, \
-QGraphicsLineItem, QGraphicsPolygonItem, QGraphicsTextItem, QInputDialog
+QGraphicsScene, QGraphicsView,QGraphicsItem, QGraphicsRectItem, \
+ QGraphicsEllipseItem, QGraphicsLineItem, QGraphicsPolygonItem, \
+  QGraphicsTextItem, QDialog, QLineEdit, QPushButton
 
 class Scene (QGraphicsScene) :
     def __init__(self,*args,**kwargs):
@@ -72,9 +73,16 @@ class Scene (QGraphicsScene) :
             polygon.setBrush(self.brush)
             self.addItem(polygon)
         if(self.tool == "text"):
-            text=QGraphicsTextItem(
-                "Tonyvre !!!!"
-            )
+            d = QDialog()
+            line = QLineEdit(d)
+            line.move(10,10)
+            b = QPushButton("Confirmer", d)
+            b.move(175,10)
+            b.clicked.connect(d.close)
+            d.resize(300,100)
+            d.setWindowTitle("Text")
+            d.exec()
+            text=QGraphicsTextItem(line.text())
             text.setPos(self.begin.x(), self.begin.y())
             self.addItem(text)
 
