@@ -12,8 +12,9 @@ class Scene (QGraphicsScene) :
         self.pen=QPen()
         self.pen.setWidth(2)
         self.pen.setColor(Qt.red)
+        self.pen.setStyle(Qt.SolidLine)
         self.brush=QBrush(Qt.green)
-        self.tool = "rect"
+        self.tool = ""
         self.create()
         self.begin,self.end=QPoint(0,0),QPoint(0,0)
         self.pressed = False
@@ -43,6 +44,10 @@ class Scene (QGraphicsScene) :
         self.addItem(rect)                # add item in Model 
     def set_pen_color(self,color) :
         self.pen.setColor(color)
+    def set_pen_style(self, pen_style):
+        self.pen.setStyle(pen_style)
+    def set_pen_width(self, pen_width):
+        self.pen.setWidth(pen_width)
     def set_brush_color(self,color) :
         self.brush.setColor(color)
     def set_tool(self,tool):
@@ -124,7 +129,7 @@ class Scene (QGraphicsScene) :
             d = QDialog()
             line = QLineEdit(d)
             line.move(10,10)
-            b = QPushButton("Confirmer", d)
+            b = QPushButton("Confirm", d)
             b.move(175,10)
             b.clicked.connect(d.close)
             d.resize(300,100)
