@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtCore import Qt, QSize,QPoint
-from PyQt5.QtGui import QIcon,QBrush,QPen
+from PyQt5.QtGui import QIcon,QBrush,QPen,QColor
 from PyQt5.QtWidgets import QApplication,QMainWindow, \
 QGraphicsScene, QGraphicsView,QGraphicsItem, QGraphicsRectItem, \
  QGraphicsEllipseItem, QGraphicsLineItem, QGraphicsPolygonItem, \
@@ -85,6 +85,86 @@ class Scene (QGraphicsScene) :
             text=QGraphicsTextItem(line.text())
             text.setPos(self.begin.x(), self.begin.y())
             self.addItem(text)
+
+    def itemsToData(self):
+        itemsToSave=[]
+        for item in self.items():
+            data = {}
+            #Looking for a Shape
+            if isinstance(item, QGraphicsLineItem):
+                data["type"]= "line"
+                data["x1"]= item.line().x1()
+                data["y1"]= item.line().y1()
+                data["x2"]= item.line().x2()
+                data["y2"]= item.line().y2()
+            if isinstance(item, QGraphicsRectItem):
+                data["type"]= "rect"
+                data["x"]= item.rect().x()
+                data["y"]= item.rect().y()
+                data["h"]= item.rect().width()
+                data["w"]= item.rect().height()
+            if isinstance(item, QGraphicsEllipseItem):
+                data["type"] = "ellipse"
+                data["x"] = item.rect().x()
+                data["y"] = item.rect().y()
+                data["h"] = item.rect().width()
+                data["w"] = item.rect().height()
+            # if isinstance(item, QGraphicsTextItem):
+            #     data["type"] = "text"
+            #     data["content"] = item.text()
+            #     data["x"] = item.x()
+            #     data["y"] = item.y()
+            #Looking for an Attribute
+            if hasattr(item, "pen"):
+                data["pen"]= {
+                    "color": item.pen().color().rgba()
+                }
+            if hasattr(item, "brush"):
+                data["brush"]= {
+                    "color": item.brush().color().rgba()
+                }
+            itemsToSave.append(data)
+        print(itemsToSave)
+        return itemsToSave
+
+    def dataToItems(self,data):
+        for dataItem in data :
+            #Find the current type of shape to load
+            itemType = dataItem["type"]
+            if itemType == "line":
+                x1 = dataItem["x1"]
+                y1 = dataItem["y1"]
+                x2 = dataItem["x2"]
+                y2 = dataItem["y2"]
+                color = dataItem["pen"]["color"]
+                item = self.addLine(x1, y1, x2, y2)
+            if itemType == "rect":
+                x = dataItem["x"]
+                y = dataItem["y"]
+                w = dataItem["w"]
+                h = dataItem["h"]
+                color = dataItem["pen"]["color"]
+                fill = dataItem["brush"]["color"]
+                item = self.addRect(x, y, h, w)
+            if itemType == "ellipse":
+                x = dataItem["x"]
+                y = dataItem["y"]
+                w = dataItem["w"]
+                h = dataItem["h"]
+                color = dataItem["pen"]["color"]
+                fill = dataItem["brush"]["color"]
+                item = self.addEllipse(x, y, h, w)
+            # if itemType == "text":
+            #     content = dataItem["content"]
+            #     x = dataItem["x"]
+            #     y = dataItem["y"]
+            #Load attributes to the current shape to be displayed
+            if "pen" in dataItem :
+                pen = QPen(QColor(dataItem["pen"]["color"]))
+                item.setPen(pen)
+            if "brush" in dataItem :
+                pen = QBrush(QColor(dataItem["brush"]["color"]))
+                item.setBrush(pen)
 
 if __name__=="__main__" :
     app=QApplication(sys.argv)
