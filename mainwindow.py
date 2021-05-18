@@ -1,7 +1,7 @@
 # code : https://www.learnpyqt.com/tutorials/actions-toolbars-menus
 # icones https://p.yusukekamiyamane.com
 
-import sys
+import sys,json,os
 from PyQt5.QtCore import Qt, QSize, QFile, QIODevice
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication, QMainWindow, \
@@ -90,6 +90,8 @@ class MainWindow(QMainWindow):
             self.new();
         elif selection=="Save As" :
             self.save();
+        elif selection=="Open" :
+            self.open();
 
     def new(self):
         popup = QMessageBox.warning(self,"New","Are you sure you want to open a new file? \nUnsaved changes will be ignored.", QMessageBox.Ok,QMessageBox.Cancel)
@@ -108,7 +110,23 @@ class MainWindow(QMainWindow):
             color=None
         return color
     def save(self):
-        pass
+        filename = QFileDialog.getSaveFileName(self, 'Save File As')
+        file_to_save = QFile(filename[0])
+        if file_to_save.open(QIODevice.WriteOnly):
+            data=[]
+            file_to_save.write(json.dumps(data).encode("utf-8"))
+        file_to_save.close()
+        self.action_file_save.setCheckable(False)
+    def open(self):
+        filename = QFileDialog.getOpenFileName(self,\
+            'Open File', os.getcwd())
+        file_to_open = QFile(filename[0])
+        if file_to_open.open(QFile.ReadOnly | QFile.Text):
+            data = json.loads(file_to_open.readAll().data().decode('utf-8'))
+            self.scene.clear()
+            # self.scene.data_to_items(data)
+        file_to_open.close()
+        self.action_file_open.setCheckable(False)
 
 if __name__=="__main__" :
     app=QApplication(sys.argv)
