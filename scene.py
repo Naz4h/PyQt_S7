@@ -37,11 +37,11 @@ class Scene (QGraphicsScene) :
         text=self.addText("Hello World !") # add item in Model 
         text.setPos(0,0)
         text.setVisible(False)
-        rect=QGraphicsRectItem(50,100,200,50)
-        rect.setFlag(QGraphicsItem.ItemIsMovable)
-        rect.setPen(self.pen)
-        rect.setBrush(self.brush)
-        self.addItem(rect)                # add item in Model 
+        # rect=QGraphicsRectItem(50,100,200,50)
+        # rect.setFlag(QGraphicsItem.ItemIsMovable)
+        # rect.setPen(self.pen)
+        # rect.setBrush(self.brush)
+        # self.addItem(rect)                # add item in Model 
     def set_pen_color(self,color) :
         self.pen.setColor(color)
     def set_pen_style(self, pen_style):
@@ -50,6 +50,8 @@ class Scene (QGraphicsScene) :
         self.pen.setWidth(pen_width)
     def set_brush_color(self,color) :
         self.brush.setColor(color)
+    def set_brush_pattern(self,pattern) : 
+        self.brush.setStyle(pattern)
     def set_tool(self,tool):
         self.tool = tool
 
@@ -72,8 +74,8 @@ class Scene (QGraphicsScene) :
                 self.removeItem(self.rect)
                 self.rect=QGraphicsRectItem(
                     self.begin.x(),self.begin.y(),
-                    self.end.x()-self.begin.x(),
-                    self.end.y()-self.begin.y()
+                    abs(self.end.x()-self.begin.x()),
+                    abs(self.end.y()-self.begin.y())
                 )
                 self.rect.setPen(pen)
                 self.addItem(self.rect)
@@ -89,6 +91,7 @@ class Scene (QGraphicsScene) :
     def mouseReleaseEvent(self, event):
         self.end=event.scenePos()
         if(self.tool == "line"):
+            self.removeItem(self.line)
             line=QGraphicsLineItem(
                 self.begin.x(),self.begin.y(),
                 self.end.x(),self.end.y()
@@ -97,16 +100,18 @@ class Scene (QGraphicsScene) :
             self.addItem(line)
             self.pressed = False
         if(self.tool == "rect"):
+            self.removeItem(self.rect)
             rect=QGraphicsRectItem(
                 self.begin.x(),self.begin.y(),
-                self.end.x()-self.begin.x(),
-                self.end.y()-self.begin.y()
+                abs(self.end.x()-self.begin.x()),
+                abs(self.end.y()-self.begin.y())
             )
             rect.setPen(self.pen)
             rect.setBrush(self.brush)
             self.addItem(rect)
             self.pressed = False
         if(self.tool == "ellipse"):
+            self.removeItem(self.ellipse)
             ellipse=QGraphicsEllipseItem(
                 self.begin.x(),self.begin.y(),
                 self.end.x()-self.begin.x(),
@@ -117,6 +122,7 @@ class Scene (QGraphicsScene) :
             self.addItem(ellipse)
             self.pressed = False
         if(self.tool == "polygon"):
+            self.removeItem(self.polygon)
             polygon=QGraphicsPolygonItem(
                 self.begin.x(),self.begin.y(),
                 self.end.x()-self.begin.x(),
