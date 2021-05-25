@@ -30,21 +30,25 @@ class MainWindow(QMainWindow):
         self.action_file_new =QAction(QIcon('Icons/new.png'), name, self)
         self.action_file_new.setStatusTip("Create new File")
         self.action_file_new.setCheckable(True)
+        self.action_file_new.setShortcut('Ctrl+N')
         self.action_file_new.triggered.connect(lambda status,selection=name : self.on_triggered_action(status,selection))
         name="Open"
         self.action_file_open=QAction(QIcon('Icons/open.png'), name, self)
         self.action_file_open.setStatusTip("Open File")
         self.action_file_open.setCheckable(True)
+        self.action_file_open.setShortcut('Ctrl+O')
         self.action_file_open.triggered.connect(lambda status,selection=name : self.on_triggered_action(status,selection))
         name="Exit"
         self.action_file_exit=QAction(QIcon('Icons/exit.png'), name, self)
         self.action_file_exit.setStatusTip("Exit application")
         self.action_file_exit.setCheckable(True)
+        self.action_file_exit.setShortcut('Ctrl+Q')
         self.action_file_exit.triggered.connect(lambda status,selection=name : self.on_triggered_action(status,selection))
         name="Save As"
         self.action_file_save=QAction(QIcon('Icons/save_as.png'), name, self)
         self.action_file_save.setStatusTip("Save file")
         self.action_file_save.setCheckable(True)
+        self.action_file_save.setShortcut('Ctrl+S')
         self.action_file_save.triggered.connect(lambda status,selection=name : self.on_triggered_action(status,selection))
         name="Pen Width" 
         self.action_style_pen_width=QAction(QIcon('Icons/pen_width.png'), name, self)
@@ -105,30 +109,35 @@ class MainWindow(QMainWindow):
         self.action_rectangle=QAction(QIcon('Icons/tool_rectangle.png'), name, self)
         self.action_rectangle.setStatusTip("Create a rectangle")
         self.action_rectangle.setCheckable(True)
+        self.action_rectangle.setShortcut('Ctrl+1')
         self.action_rectangle.triggered.connect(lambda status,selection=name :
                                                 self.on_triggered_action(status,selection))
         name="Ellipse"
         self.action_ellipse=QAction(QIcon('Icons/tool_ellipse.png'), name, self)
         self.action_ellipse.setStatusTip("Create an ellipse")
         self.action_ellipse.setCheckable(True)
+        self.action_ellipse.setShortcut('Ctrl+2')
         self.action_ellipse.triggered.connect(lambda status,selection=name :
                                                 self.on_triggered_action(status,selection))
         name="Line"
         self.action_line=QAction(QIcon('Icons/tool_line.png'), name, self)
         self.action_line.setStatusTip("Create a line")
         self.action_line.setCheckable(True)
+        self.action_line.setShortcut('Ctrl+3')
         self.action_line.triggered.connect(lambda status,selection=name :
                                                 self.on_triggered_action(status,selection))
         name="Polygon"
         self.action_polygon=QAction(QIcon('Icons/tool_polygon.png'), name, self)
         self.action_polygon.setStatusTip("Create a polygon")
         self.action_polygon.setCheckable(True)
+        self.action_polygon.setShortcut('Ctrl+4')
         self.action_polygon.triggered.connect(lambda status,selection=name :
                                                 self.on_triggered_action(status,selection))
         name="Text"
         self.action_text=QAction(QIcon('Icons/tool_text.png'), name, self)
         self.action_text.setStatusTip("Create a text")
         self.action_text.setCheckable(True)
+        self.action_text.setShortcut('Ctrl+5')
         self.action_text.triggered.connect(lambda status,selection=name :
                                                 self.on_triggered_action(status,selection))
 
@@ -147,6 +156,11 @@ class MainWindow(QMainWindow):
         self.action_file_readme.setStatusTip("README")
         self.action_file_readme.setCheckable(True)
         self.action_file_readme.triggered.connect(lambda status,selection=name : self.on_triggered_action(status,selection))
+        name="Shortcut"
+        self.action_file_shortcut=QAction(QIcon('Icons/tool_text.png'), name, self)
+        self.action_file_shortcut.setStatusTip("Shortcut")
+        self.action_file_shortcut.setCheckable(True)
+        self.action_file_shortcut.triggered.connect(lambda status, selection=name : self.on_triggered_action(status,selection))
     def create_toolbars(self) :
         self.toolbar=QToolBar("Main Toolbar")
         self.addToolBar(self.toolbar)
@@ -206,7 +220,7 @@ class MainWindow(QMainWindow):
         self.menu_help.addAction(self.action_file_aboutus)
         self.menu_help.addAction(self.action_file_aboutqt)
         self.menu_help.addAction(self.action_file_readme)
-
+        self.menu_help.addAction(self.action_file_shortcut)
 
     def on_triggered_action(self,status,selection):
         print("status:",status,", selection:",selection)
@@ -326,6 +340,8 @@ class MainWindow(QMainWindow):
             self.help_about_qt();
         elif selection=="README" :
             self.help_about_readme();
+        elif selection=="Shortcut" :
+            self.help_shortcut();
 
     def new(self):
         popup = QMessageBox.warning(self,"New","Are you sure you want to open a new file? \nUnsaved changes will be ignored.", QMessageBox.Ok,QMessageBox.Cancel)
@@ -373,6 +389,101 @@ class MainWindow(QMainWindow):
         QMessageBox.information(self, self.tr("About this app"),
                                 self.tr("README (need to be written)"))
         self.action_file_readme.setCheckable(False)
+    def contextMenuEvent(self, event):
+        contextMenu = QMenu(self)
+
+        contextMenu.addSeparator()
+
+        contextMenuTools = QMenu("Tools",self)
+        contextMenu.addMenu(contextMenuTools)
+        lineAct = contextMenuTools.addAction(QIcon('Icons/tool_line.png'),"Line")
+        rectAct = contextMenuTools.addAction(QIcon('Icons/tool_rectangle.png'),"Rectangle")
+        ellipseAct = contextMenuTools.addAction(QIcon('Icons/tool_ellipse.png'),"Ellipse")
+        polygoneAct = contextMenuTools.addAction(QIcon('Icons/tool_polygon.png'),"Polygone")
+        contextMenuTools.addSeparator()
+        textAct = contextMenuTools.addAction(QIcon('Icons/tool_text.png'), "Text")
+        
+        contextMenuStyle = QMenu("Style",self)
+        contextMenu.addMenu(contextMenuStyle)
+        colorPenAct = contextMenuStyle.addAction(QIcon('Icons/colorize.png'),"Color Pen")
+        widthPenAct = contextMenuStyle.addAction(QIcon('Icons/pen_width.png'),"Width Pen")
+        contextMenuStyle.addSeparator()
+        colorBrushAct = contextMenuStyle.addAction(QIcon('Icons/colorize.png'),"Brush Color")
+
+        contextMenu.addSeparator()
+
+        quitAct = contextMenu.addAction("Quit")
+        action = contextMenu.exec_(self.mapToGlobal(event.pos()))
+
+
+        if action==quitAct:
+            self.exit()
+        elif action==colorPenAct:
+            color=self.style_color()
+            if color :
+                self.scene.set_pen_color(color)
+        elif action==widthPenAct:
+            d = QDialog()
+            line = QLineEdit(d)
+            line.move(10,10)
+            b = QPushButton("Confirm", d)
+            b.move(175,10)
+            b.clicked.connect(d.close)
+            d.resize(300,100)
+            d.setWindowTitle("Number of the width")
+            d.exec()
+            pen_width = 0
+            try : 
+                pen_width = int(line.text())
+            except : 
+                d.setWindowTitle("Enter an integer")
+            if pen_width!=0:
+                self.scene.set_pen_width(pen_width)
+        elif action==colorBrushAct:
+            color=self.style_color()
+            if color :
+                self.scene.set_brush_color(color)
+
+        elif action==lineAct:
+            self.scene.set_tool("line")
+            self.action_rectangle.setChecked(False)
+            self.action_ellipse.setChecked(False)
+            self.action_polygon.setChecked(False)
+            self.action_text.setChecked(False)
+            self.action_line.setChecked(True)
+        elif action ==rectAct:
+            self.scene.set_tool("rect")
+            self.action_rectangle.setChecked(True)
+            self.action_ellipse.setChecked(False)
+            self.action_polygon.setChecked(False)
+            self.action_text.setChecked(False)
+            self.action_line.setChecked(False)
+        elif action ==ellipseAct:
+            self.scene.set_tool("ellipse")
+            self.action_rectangle.setChecked(False)
+            self.action_ellipse.setChecked(True)
+            self.action_polygon.setChecked(False)
+            self.action_text.setChecked(False)
+            self.action_line.setChecked(False)
+        elif action ==polygoneAct:
+            self.scene.set_tool("polygon")
+            self.action_rectangle.setChecked(False)
+            self.action_ellipse.setChecked(False)
+            self.action_polygon.setChecked(True)
+            self.action_text.setChecked(False)
+            self.action_line.setChecked(False)
+        elif action==textAct:
+            self.scene.set_tool("text")
+            self.action_rectangle.setChecked(False)
+            self.action_ellipse.setChecked(False)
+            self.action_polygon.setChecked(False)
+            self.action_text.setChecked(True)
+            self.action_line.setChecked(False)
+            
+    def help_shortcut(self):
+        QMessageBox.information(self,self.tr("Shortcuts list"),
+                                self.tr("- CTRL+N : New file \n- CTRL+O : Open file\n- CTRL+Q : Exit application \n- CTRL+S : Save file as \n\n- CTRL+1 : Rectangle \n- CTRL+2 : Ellipse \n- CTRL+3 : Line \n- CTRL+4 : Polygon \n- CTRL+5 : Text \n"))
+        self.action_file_shortcut.setCheckable(False)
 
 if __name__=="__main__" :
     app=QApplication(sys.argv)
