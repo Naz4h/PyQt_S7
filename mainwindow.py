@@ -74,15 +74,33 @@ class MainWindow(QMainWindow):
         self.action_style_brush_color=QAction(QIcon('Icons/colorize.png'), name, self)
         self.action_style_brush_color.setStatusTip("Select Brush color")
         self.action_style_brush_color.triggered.connect(lambda status,selection=name : self.on_triggered_action(status,selection))
-        name="Brush Solid Patern" 
-        self.action_style_brush_solid=QAction(QIcon('Icons/cross_pattern.png'), name, self)
-        self.action_style_brush_solid.setStatusTip("Select brush solid patern")
+        
+        name="Brush Solid Pattern" 
+        self.action_style_brush_solid=QAction(QIcon('Icons/solid_pattern.png'), name, self)
+        self.action_style_brush_solid.setStatusTip("Select brush solid pattern")
+        self.action_style_brush_solid.setCheckable(True)
         self.action_style_brush_solid.triggered.connect(lambda status,selection=name : self.on_triggered_action(status,selection))
-        name="Brush Cross Patern" 
+        name="Brush Cross Pattern" 
         self.action_style_brush_cross=QAction(QIcon('Icons/cross_pattern.png'), name, self)
-        self.action_style_brush_cross.setStatusTip("Select brush cross patern")
+        self.action_style_brush_cross.setStatusTip("Select brush cross pattern")
+        self.action_style_brush_cross.setCheckable(True)
         self.action_style_brush_cross.triggered.connect(lambda status,selection=name : self.on_triggered_action(status,selection))
-
+        name="Brush Dense2 Pattern" 
+        self.action_style_brush_dense2=QAction(QIcon('Icons/dense2_pattern.png'), name, self)
+        self.action_style_brush_dense2.setStatusTip("Select brush dense2 pattern")
+        self.action_style_brush_dense2.setCheckable(True)
+        self.action_style_brush_dense2.triggered.connect(lambda status,selection=name : self.on_triggered_action(status,selection))
+        name="Brush Horizontal Pattern" 
+        self.action_style_brush_hor=QAction(QIcon('Icons/hor_pattern.png'), name, self)
+        self.action_style_brush_hor.setStatusTip("Select brush horizontal pattern")
+        self.action_style_brush_hor.setCheckable(True)
+        self.action_style_brush_hor.triggered.connect(lambda status,selection=name : self.on_triggered_action(status,selection))
+        name="Brush Vertical Pattern" 
+        self.action_style_brush_ver=QAction(QIcon('Icons/ver_pattern.png'), name, self)
+        self.action_style_brush_ver.setStatusTip("Select brush vertical pattern")
+        self.action_style_brush_ver.setCheckable(True)
+        self.action_style_brush_ver.triggered.connect(lambda status,selection=name : self.on_triggered_action(status,selection))
+        
         name="Rectangle"
         self.action_rectangle=QAction(QIcon('Icons/tool_rectangle.png'), name, self)
         self.action_rectangle.setStatusTip("Create a rectangle")
@@ -175,6 +193,9 @@ class MainWindow(QMainWindow):
         self.brush_style.addAction(self.action_style_brush_color)
         self.brush_fill.addAction(self.action_style_brush_solid)
         self.brush_fill.addAction(self.action_style_brush_cross)
+        self.brush_fill.addAction(self.action_style_brush_dense2)
+        self.brush_fill.addAction(self.action_style_brush_hor)
+        self.brush_fill.addAction(self.action_style_brush_ver)
 
         self.menu_tools.addAction(self.action_line)
         self.menu_tools.addAction(self.action_rectangle)
@@ -240,6 +261,27 @@ class MainWindow(QMainWindow):
             color=self.style_color()
             if color :
                 self.scene.set_brush_color(color)
+                
+        elif selection== "Brush Solid Pattern" :
+            brush_pattern = Qt.SolidPattern
+            if brush_pattern : 
+                self.scene.set_brush_pattern(brush_pattern)
+        elif selection== "Brush Cross Pattern" : 
+            brush_pattern = Qt.CrossPattern
+            if brush_pattern : 
+                self.scene.set_brush_pattern(brush_pattern)
+        elif selection== "Brush Dense2 Pattern" : 
+            brush_pattern = Qt.Dense2Pattern
+            if brush_pattern : 
+                self.scene.set_brush_pattern(brush_pattern)
+        elif selection== "Brush Horizontal Pattern" :
+            brush_pattern = Qt.HorPattern
+            if brush_pattern :
+                self.scene.set_brush_pattern(brush_pattern)
+        elif selection== "Brush Vertical Pattern" : 
+            brush_pattern = Qt.VerPattern
+            if brush_pattern : 
+                self.scene.set_brush_pattern(brush_pattern)
 
         elif selection=="Line" : 
             self.scene.set_tool("line")
