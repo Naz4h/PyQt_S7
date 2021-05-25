@@ -1,6 +1,6 @@
 import sys
-from PyQt5.QtCore import Qt, QSize,QPoint
-from PyQt5.QtGui import QIcon,QBrush,QPen,QColor
+from PyQt5.QtCore import Qt, QSize,QPoint,QTimer
+from PyQt5.QtGui import QIcon,QBrush,QPen,QColor, QPolygonF
 from PyQt5.QtWidgets import QApplication,QMainWindow, \
 QGraphicsScene, QGraphicsView,QGraphicsItem, QGraphicsRectItem, \
  QGraphicsEllipseItem, QGraphicsLineItem, QGraphicsPolygonItem, \
@@ -32,6 +32,7 @@ class Scene (QGraphicsScene) :
                     self.end.x()-self.begin.x(),
                     self.end.y()-self.begin.y()
                 )
+        self.polygonPoints = []
 
     def create(self) :
         text=self.addText("Hello World !") # add item in Model 
@@ -54,14 +55,41 @@ class Scene (QGraphicsScene) :
         self.brush.setStyle(pattern)
     def set_tool(self,tool):
         self.tool = tool
+     
+    def mouseDoubleClickEvent(self, event):
+        if(event.button() == Qt.LeftButton and self.tool == "polygon"):
+            polygon = QGraphicsPolygonItem(QPolygonF(self.polygonPoints))
+            polygon.setPen(self.pen)
+            polygon.setBrush(self.brush)
+            self.addItem(polygon)
+            timer = QTimer(self)
+            timer.singleShot(500,self.clearPolygonPoints)
+
+    def clearPolygonPoints(self):
+        print("clearing points")
+        self.polygonPoints = []
 
     def mousePressEvent(self, event):
         self.begin=self.end=event.scenePos()
         self.pressed = True
+        if event.buttons() == Qt.LeftButton: 
+            if(self.tool == "text"):
+                d = QDialog()
+                line = QLineEdit(d)
+                line.move(10,10)
+                b = QPushButton("Confirm", d)
+                b.move(175,10)
+                b.clicked.connect(d.close)
+                d.resize(300,100)
+                d.setWindowTitle("Text")
+                d.exec()
+                text=QGraphicsTextItem(line.text())
+                text.setPos(self.begin.x(), self.begin.y())
+                self.addItem(text)
     def mouseMoveEvent(self, event):
         self.end=event.scenePos()
         pen = QPen(Qt.black, 2, Qt.DashLine)
-        if (self.pressed) : 
+        if event.buttons() == Qt.LeftButton: 
             if(self.tool == "line"):
                 self.removeItem(self.line)
                 self.line=QGraphicsLineItem(
@@ -122,29 +150,10 @@ class Scene (QGraphicsScene) :
             self.addItem(ellipse)
             self.pressed = False
         if(self.tool == "polygon"):
-            self.removeItem(self.polygon)
-            polygon=QGraphicsPolygonItem(
-                self.begin.x(),self.begin.y(),
-                self.end.x()-self.begin.x(),
-                self.end.y()-self.begin.y()
-            )
-            polygon.setPen(self.pen)
-            polygon.setBrush(self.brush)
-            self.addItem(polygon)
-        if(self.tool == "text"):
-            d = QDialog()
-            line = QLineEdit(d)
-            line.move(10,10)
-            b = QPushButton("Confirm", d)
-            b.move(175,10)
-            b.clicked.connect(d.close)
-            d.resize(300,100)
-            d.setWindowTitle("Text")
-            d.exec()
-            text=QGraphicsTextItem(line.text())
-            text.setPos(self.begin.x(), self.begin.y())
-            self.addItem(text)
-
+            obj = QGraphicsEllipseItem(self.end.x(),self.end.y(),2,2)
+            self.addItem(obj)
+            self.polygonPoints.append(QPoint(event.scenePos().x(), event.scenePos().y()))
+        
     def itemsToData(self):
         itemsToSave=[]
         for item in self.items():
