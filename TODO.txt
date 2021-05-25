@@ -62,7 +62,7 @@ Tools : Line
         text 
 Style : Pen (submenu)
           color  (Color selection dialog)
-          line   (submenu) (QPen : mode solidLine, DotLine, DotDashLine ...
+          line   (submenu) (QPen : mode solidLine, DotLine, DotDashLine ...)
           width  (submenu or dialog)
         Brush (submenu)
           color  (Color selection  dialog)
@@ -79,7 +79,7 @@ Dans la barre d'outils
 
 Open, Save, Exit, Ligne, Polygon ....
 
-Dans le menu surgissant 
+Dans le menu surgissant : contextMenuEvent()
 .......................
 
 Tools (cf Tools de la barre d'actions)
@@ -96,7 +96,7 @@ Trace elastique (Mouse move event) : sans remplissage
 Trace final  : (Mouse Release Event) : item graphique avec les styles selectionnes
 
 Selection et deplacement  : 
-  - d'un item graphique
+  - d'un item graphique : self.itemAt : renvoie l'objet cliqué
   - d'un groupe d'items graphiques
 
 Faire/défaire la création d'items graphiques
