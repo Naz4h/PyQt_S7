@@ -387,7 +387,7 @@ class MainWindow(QMainWindow):
         self.action_file_aboutqt.setCheckable(False)
     def help_about_readme(self):
         QMessageBox.information(self, self.tr("About this app"),
-                                self.tr("README (need to be written)"))
+                                self.tr("This application is a graphical editor that allows you to draw different Shapes on a blank page.\n\nHere are the Shapes that can be created at this point:\n -Rectangle\n -Line\n -Ellipse\n -Polygon\n -Text\n\nThere are different Styles available for these Shapes.\nFor example, you can either choose the color of the Shape or change the brush style.\n\nIt is also possible to Save/Load a file. Most of the Shapes are handled by the Save/Load feature (there are still issues about Polygons and Texts).\n\nThis application also includes shortcuts to draw Shapes quicker and easier. A right click will make a menu pop to choose a Shape to draw."))
         self.action_file_readme.setCheckable(False)
     def contextMenuEvent(self, event):
         contextMenu = QMenu(self)
