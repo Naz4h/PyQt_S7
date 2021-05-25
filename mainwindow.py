@@ -228,7 +228,7 @@ class MainWindow(QMainWindow):
         filename = QFileDialog.getSaveFileName(self, 'Save File As')
         file_to_save = QFile(filename[0])
         if file_to_save.open(QIODevice.WriteOnly):
-            data=[]
+            data=self.scene.itemsToData()
             file_to_save.write(json.dumps(data).encode("utf-8"))
         file_to_save.close()
         self.action_file_save.setCheckable(False)
@@ -239,7 +239,7 @@ class MainWindow(QMainWindow):
         if file_to_open.open(QFile.ReadOnly | QFile.Text):
             data = json.loads(file_to_open.readAll().data().decode('utf-8'))
             self.scene.clear()
-            # self.scene.data_to_items(data)
+            self.scene.dataToItems(data)
         file_to_open.close()
         self.action_file_open.setCheckable(False)
     def help_about_us(self):
