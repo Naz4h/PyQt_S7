@@ -373,6 +373,96 @@ class MainWindow(QMainWindow):
         QMessageBox.information(self, self.tr("About this app"),
                                 self.tr("README (need to be written)"))
         self.action_file_readme.setCheckable(False)
+    def contextMenuEvent(self, event):
+        contextMenu = QMenu(self)
+
+        contextMenu.addSeparator()
+
+        contextMenuTools = QMenu("Tools",self)
+        contextMenu.addMenu(contextMenuTools)
+        lineAct = contextMenuTools.addAction(QIcon('Icons/tool_line.png'),"Line")
+        rectAct = contextMenuTools.addAction(QIcon('Icons/tool_rectangle.png'),"Rectangle")
+        ellipseAct = contextMenuTools.addAction(QIcon('Icons/tool_ellipse.png'),"Ellipse")
+        polygoneAct = contextMenuTools.addAction(QIcon('Icons/tool_polygon.png'),"Polygone")
+        contextMenuTools.addSeparator()
+        textAct = contextMenuTools.addAction(QIcon('Icons/tool_text.png'), "Text")
+        
+        contextMenuStyle = QMenu("Style",self)
+        contextMenu.addMenu(contextMenuStyle)
+        colorPenAct = contextMenuStyle.addAction(QIcon('Icons/colorize.png'),"Color Pen")
+        widthPenAct = contextMenuStyle.addAction(QIcon('Icons/pen_width.png'),"Width Pen")
+        contextMenuStyle.addSeparator()
+        colorBrushAct = contextMenuStyle.addAction(QIcon('Icons/colorize.png'),"Brush Color")
+
+        contextMenu.addSeparator()
+
+        quitAct = contextMenu.addAction("Quit")
+        action = contextMenu.exec_(self.mapToGlobal(event.pos()))
+
+
+        if action==quitAct:
+            self.exit()
+        elif action==colorPenAct:
+            color=self.style_color()
+            if color :
+                self.scene.set_pen_color(color)
+        elif action==widthPenAct:
+            d = QDialog()
+            line = QLineEdit(d)
+            line.move(10,10)
+            b = QPushButton("Confirm", d)
+            b.move(175,10)
+            b.clicked.connect(d.close)
+            d.resize(300,100)
+            d.setWindowTitle("Number of the width")
+            d.exec()
+            pen_width = 0
+            try : 
+                pen_width = int(line.text())
+            except : 
+                d.setWindowTitle("Enter an integer")
+            if pen_width!=0:
+                self.scene.set_pen_width(pen_width)
+        elif action==colorBrushAct:
+            color=self.style_color()
+            if color :
+                self.scene.set_brush_color(color)
+
+        elif action==lineAct:
+            self.scene.set_tool("line")
+            self.action_rectangle.setChecked(False)
+            self.action_ellipse.setChecked(False)
+            self.action_polygon.setChecked(False)
+            self.action_text.setChecked(False)
+            self.action_line.setChecked(True)
+        elif action ==rectAct:
+            self.scene.set_tool("rect")
+            self.action_rectangle.setChecked(True)
+            self.action_ellipse.setChecked(False)
+            self.action_polygon.setChecked(False)
+            self.action_text.setChecked(False)
+            self.action_line.setChecked(False)
+        elif action ==ellipseAct:
+            self.scene.set_tool("ellipse")
+            self.action_rectangle.setChecked(False)
+            self.action_ellipse.setChecked(True)
+            self.action_polygon.setChecked(False)
+            self.action_text.setChecked(False)
+            self.action_line.setChecked(False)
+        elif action ==polygoneAct:
+            self.scene.set_tool("polygon")
+            self.action_rectangle.setChecked(False)
+            self.action_ellipse.setChecked(False)
+            self.action_polygon.setChecked(True)
+            self.action_text.setChecked(False)
+            self.action_line.setChecked(False)
+        elif action==textAct:
+            self.scene.set_tool("text")
+            self.action_rectangle.setChecked(False)
+            self.action_ellipse.setChecked(False)
+            self.action_polygon.setChecked(False)
+            self.action_text.setChecked(True)
+            self.action_line.setChecked(False)
 
 if __name__=="__main__" :
     app=QApplication(sys.argv)
