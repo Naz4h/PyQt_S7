@@ -7,7 +7,7 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication, QMainWindow, \
 QToolBar,QAction,QStatusBar,QGraphicsView, \
 QLabel,QVBoxLayout,QDialog, QDialogButtonBox, \
-QColorDialog, QMenu,QMessageBox, QFileDialog
+QColorDialog, QMenu,QMessageBox, QFileDialog, QLineEdit, QPushButton
 
 from scene import Scene
 
@@ -46,15 +46,61 @@ class MainWindow(QMainWindow):
         self.action_file_save.setStatusTip("Save file")
         self.action_file_save.setCheckable(True)
         self.action_file_save.triggered.connect(lambda status,selection=name : self.on_triggered_action(status,selection))
+        name="Pen Width" 
+        self.action_style_pen_width=QAction(QIcon('Icons/pen_width.png'), name, self)
+        self.action_style_pen_width.setStatusTip("Select Pen width")
+        self.action_style_pen_width.triggered.connect(lambda status,selection=name : self.on_triggered_action(status,selection))
         name="Pen Color" 
-        self.action_style_pen_color=QAction(QIcon('Icons/monkey_on_16x16.png'), name, self)
+        self.action_style_pen_color=QAction(QIcon('Icons/colorize.png'), name, self)
         self.action_style_pen_color.setStatusTip("Select Pen color")
         self.action_style_pen_color.triggered.connect(lambda status,selection=name : self.on_triggered_action(status,selection))
+        name="Solid Line" 
+        self.action_style_solid_line=QAction(QIcon('Icons/tool_line.png'), name, self)
+        self.action_style_solid_line.setStatusTip("Create a solid line")
+        self.action_style_solid_line.setCheckable(True)
+        self.action_style_solid_line.triggered.connect(lambda status,selection=name : self.on_triggered_action(status,selection))
+        name="Dot Line" 
+        self.action_style_dot_line=QAction(QIcon('Icons/dot_line.png'), name, self)
+        self.action_style_dot_line.setStatusTip("Create a dot line")
+        self.action_style_dot_line.setCheckable(True)
+        self.action_style_dot_line.triggered.connect(lambda status,selection=name : self.on_triggered_action(status,selection))
+        name="Dash Line" 
+        self.action_style_dash_line=QAction(QIcon('Icons/dash_line.png'), name, self)
+        self.action_style_dash_line.setStatusTip("Create a dash line")
+        self.action_style_dash_line.setCheckable(True)
+        self.action_style_dash_line.triggered.connect(lambda status,selection=name : self.on_triggered_action(status,selection))
+
         name="Brush Color" 
-        self.action_style_brush_color=QAction(QIcon('Icons/monkey_on_16x16.png'), name, self)
+        self.action_style_brush_color=QAction(QIcon('Icons/colorize.png'), name, self)
         self.action_style_brush_color.setStatusTip("Select Brush color")
         self.action_style_brush_color.triggered.connect(lambda status,selection=name : self.on_triggered_action(status,selection))
-
+        
+        name="Brush Solid Pattern" 
+        self.action_style_brush_solid=QAction(QIcon('Icons/solid_pattern.png'), name, self)
+        self.action_style_brush_solid.setStatusTip("Select brush solid pattern")
+        self.action_style_brush_solid.setCheckable(True)
+        self.action_style_brush_solid.triggered.connect(lambda status,selection=name : self.on_triggered_action(status,selection))
+        name="Brush Cross Pattern" 
+        self.action_style_brush_cross=QAction(QIcon('Icons/cross_pattern.png'), name, self)
+        self.action_style_brush_cross.setStatusTip("Select brush cross pattern")
+        self.action_style_brush_cross.setCheckable(True)
+        self.action_style_brush_cross.triggered.connect(lambda status,selection=name : self.on_triggered_action(status,selection))
+        name="Brush Dense2 Pattern" 
+        self.action_style_brush_dense2=QAction(QIcon('Icons/dense2_pattern.png'), name, self)
+        self.action_style_brush_dense2.setStatusTip("Select brush dense2 pattern")
+        self.action_style_brush_dense2.setCheckable(True)
+        self.action_style_brush_dense2.triggered.connect(lambda status,selection=name : self.on_triggered_action(status,selection))
+        name="Brush Horizontal Pattern" 
+        self.action_style_brush_hor=QAction(QIcon('Icons/hor_pattern.png'), name, self)
+        self.action_style_brush_hor.setStatusTip("Select brush horizontal pattern")
+        self.action_style_brush_hor.setCheckable(True)
+        self.action_style_brush_hor.triggered.connect(lambda status,selection=name : self.on_triggered_action(status,selection))
+        name="Brush Vertical Pattern" 
+        self.action_style_brush_ver=QAction(QIcon('Icons/ver_pattern.png'), name, self)
+        self.action_style_brush_ver.setStatusTip("Select brush vertical pattern")
+        self.action_style_brush_ver.setCheckable(True)
+        self.action_style_brush_ver.triggered.connect(lambda status,selection=name : self.on_triggered_action(status,selection))
+        
         name="Rectangle"
         self.action_rectangle=QAction(QIcon('Icons/tool_rectangle.png'), name, self)
         self.action_rectangle.setStatusTip("Create a rectangle")
@@ -75,13 +121,13 @@ class MainWindow(QMainWindow):
                                                 self.on_triggered_action(status,selection))
         name="Polygon"
         self.action_polygon=QAction(QIcon('Icons/tool_polygon.png'), name, self)
-        self.action_polygon.setStatusTip("Create a line")
+        self.action_polygon.setStatusTip("Create a polygon")
         self.action_polygon.setCheckable(True)
         self.action_polygon.triggered.connect(lambda status,selection=name :
                                                 self.on_triggered_action(status,selection))
         name="Text"
         self.action_text=QAction(QIcon('Icons/tool_text.png'), name, self)
-        self.action_text.setStatusTip("Create a line")
+        self.action_text.setStatusTip("Create a text")
         self.action_text.setCheckable(True)
         self.action_text.triggered.connect(lambda status,selection=name :
                                                 self.on_triggered_action(status,selection))
@@ -125,8 +171,13 @@ class MainWindow(QMainWindow):
 
         self.pen_style = QMenu('Pen',self)
         self.menu_style.addMenu(self.pen_style)
+        self.pen_line = QMenu('Pen Line', self)
+        self.pen_style.addMenu(self.pen_line)
+
         self.brush_style = QMenu('Brush',self)
         self.menu_style.addMenu(self.brush_style)
+        self.brush_fill = QMenu('Brush Fill', self)
+        self.brush_style.addMenu(self.brush_fill)
         
         self.menu_file.addAction(self.action_file_new)
         self.menu_file.addAction(self.action_file_open)
@@ -134,7 +185,17 @@ class MainWindow(QMainWindow):
         self.menu_file.addAction(self.action_file_exit)
 
         self.pen_style.addAction(self.action_style_pen_color)
+        self.pen_style.addAction(self.action_style_pen_width)
+        self.pen_line.addAction(self.action_style_solid_line)
+        self.pen_line.addAction(self.action_style_dash_line)
+        self.pen_line.addAction(self.action_style_dot_line)
+
         self.brush_style.addAction(self.action_style_brush_color)
+        self.brush_fill.addAction(self.action_style_brush_solid)
+        self.brush_fill.addAction(self.action_style_brush_cross)
+        self.brush_fill.addAction(self.action_style_brush_dense2)
+        self.brush_fill.addAction(self.action_style_brush_hor)
+        self.brush_fill.addAction(self.action_style_brush_ver)
 
         self.menu_tools.addAction(self.action_line)
         self.menu_tools.addAction(self.action_rectangle)
@@ -155,14 +216,72 @@ class MainWindow(QMainWindow):
             self.new()
         elif selection=="Save As" :
             self.save()
+
         elif selection=="Pen Color" :
             color=self.style_color()
             if color :
                 self.scene.set_pen_color(color)
+        elif selection=="Pen Width":
+            d = QDialog()
+            line = QLineEdit(d)
+            line.move(10,10)
+            b = QPushButton("Confirm", d)
+            b.move(175,10)
+            b.clicked.connect(d.close)
+            d.resize(300,100)
+            d.setWindowTitle("Number of the width")
+            d.exec()
+            pen_width = 0
+            try : 
+                pen_width = int(line.text())
+            except : 
+                d.setWindowTitle("Enter an integer")
+            if pen_width!=0:
+                self.scene.set_pen_width(pen_width)
+        elif selection=="Solid Line": 
+            self.action_style_dot_line.setChecked(False)
+            self.action_style_dash_line.setChecked(False)
+            pen_style = Qt.SolidLine
+            if pen_style : 
+                self.scene.set_pen_style(pen_style)
+        elif selection=="Dot Line": 
+            self.action_style_solid_line.setChecked(False)
+            self.action_style_dash_line.setChecked(False)
+            pen_style = Qt.DotLine
+            if pen_style : 
+                self.scene.set_pen_style(pen_style)
+        elif selection=="Dash Line": 
+            self.action_style_dot_line.setChecked(False)
+            self.action_style_solid_line.setChecked(False)
+            pen_style = Qt.DashLine
+            if pen_style : 
+                self.scene.set_pen_style(pen_style)
+
         elif selection=="Brush Color" :
             color=self.style_color()
             if color :
                 self.scene.set_brush_color(color)
+                
+        elif selection== "Brush Solid Pattern" :
+            brush_pattern = Qt.SolidPattern
+            if brush_pattern : 
+                self.scene.set_brush_pattern(brush_pattern)
+        elif selection== "Brush Cross Pattern" : 
+            brush_pattern = Qt.CrossPattern
+            if brush_pattern : 
+                self.scene.set_brush_pattern(brush_pattern)
+        elif selection== "Brush Dense2 Pattern" : 
+            brush_pattern = Qt.Dense2Pattern
+            if brush_pattern : 
+                self.scene.set_brush_pattern(brush_pattern)
+        elif selection== "Brush Horizontal Pattern" :
+            brush_pattern = Qt.HorPattern
+            if brush_pattern :
+                self.scene.set_brush_pattern(brush_pattern)
+        elif selection== "Brush Vertical Pattern" : 
+            brush_pattern = Qt.VerPattern
+            if brush_pattern : 
+                self.scene.set_brush_pattern(brush_pattern)
 
         elif selection=="Line" : 
             self.scene.set_tool("line")
@@ -228,7 +347,7 @@ class MainWindow(QMainWindow):
         filename = QFileDialog.getSaveFileName(self, 'Save File As')
         file_to_save = QFile(filename[0])
         if file_to_save.open(QIODevice.WriteOnly):
-            data=[]
+            data=self.scene.itemsToData()
             file_to_save.write(json.dumps(data).encode("utf-8"))
         file_to_save.close()
         self.action_file_save.setCheckable(False)
@@ -239,7 +358,7 @@ class MainWindow(QMainWindow):
         if file_to_open.open(QFile.ReadOnly | QFile.Text):
             data = json.loads(file_to_open.readAll().data().decode('utf-8'))
             self.scene.clear()
-            # self.scene.data_to_items(data)
+            self.scene.dataToItems(data)
         file_to_open.close()
         self.action_file_open.setCheckable(False)
     def help_about_us(self):
